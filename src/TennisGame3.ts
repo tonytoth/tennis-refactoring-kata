@@ -1,34 +1,75 @@
 import { TennisGame } from './TennisGame';
 
 export class TennisGame3 implements TennisGame {
-  private p2: number = 0;
-  private p1: number = 0;
-  private p1N: string;
-  private p2N: string;
+  private player2Score: number = 0;
+  private player1Score: number = 0;
+  private player1Name: string;
+  private player2Name: string;
 
-  constructor(p1N: string, p2N: string) {
-    this.p1N = p1N;
-    this.p2N = p2N;
+  private scoreDescription: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
+
+  constructor(player1Name: string, player2Name: string) {
+    this.player1Name = player1Name;
+    this.player2Name = player2Name;
+  }
+
+  private scoreIsEqual(): boolean {
+    return this.player1Score === this.player2Score;
+  }
+
+  private isAdvantage(): boolean {
+    return (((this.player1Score - this.player2Score) * (this.player1Score - this.player2Score)) === 1);
+  }
+
+  private getPlayerInTheLead(): string {
+    return this.player1Score > this.player2Score ? this.player1Name : this.player2Name;
+  }
+
+  private displayScoreForFinalStage(): string {
+    if (this.scoreIsEqual())
+      return 'Deuce';
+
+    if (this.isAdvantage()) {
+      return 'Advantage ' + this.getPlayerInTheLead();
+    }
+
+    return 'Win for ' + this.getPlayerInTheLead();
+  }
+
+  private displayScoreForEarlyStage(): string {
+    const player1ScoreDescription = this.scoreDescription[this.player1Score];
+
+    if (this.scoreIsEqual()) {
+      return player1ScoreDescription + '-All';
+    }
+
+    return player1ScoreDescription + '-' + this.scoreDescription[this.player2Score];  
+  }
+
+  private isFinalStageOfThePoint(): boolean {
+    const playerHasLessThan3Points = (score: number) => score < 4;
+
+    return !(
+      playerHasLessThan3Points(this.player1Score) &&
+      playerHasLessThan3Points(this.player2Score) &&
+      !(this.player1Score + this.player2Score === 6)
+    );
   }
 
   getScore(): string {
-    let s: string;
-    if (this.p1 < 4 && this.p2 < 4 && !(this.p1 + this.p2 === 6)) {
-      const p: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
-      s = p[this.p1];
-      return (this.p1 === this.p2) ? s + '-All' : s + '-' + p[this.p2];
-    } else {
-      if (this.p1 === this.p2)
-        return 'Deuce';
-      s = this.p1 > this.p2 ? this.p1N : this.p2N;
-      return (((this.p1 - this.p2) * (this.p1 - this.p2)) === 1) ? 'Advantage ' + s : 'Win for ' + s;
+    if (this.isFinalStageOfThePoint()) {
+      return this.displayScoreForFinalStage()
     }
+
+    return this.displayScoreForEarlyStage()
   }
 
   wonPoint(playerName: string): void {
-    if (playerName === 'player1')
-      this.p1 += 1;
+    const isPlayer1Name = playerName === this.player1Name;
+
+    if (isPlayer1Name)
+      this.player1Score += 1;
     else
-      this.p2 += 1;
+      this.player2Score += 1;
   }
 }
