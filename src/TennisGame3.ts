@@ -1,8 +1,8 @@
 import { TennisGame } from './TennisGame';
-//test commit
+
 export class TennisGame3 implements TennisGame {
-  private p2: number = 0;
-  private p1: number = 0;
+  private player1: number = 0;
+  private player2: number = 0;
   private p1N: string;
   private p2N: string;
 
@@ -13,22 +13,22 @@ export class TennisGame3 implements TennisGame {
 
   getScore(): string {
     let s: string;
-    if (this.p1 < 4 && this.p2 < 4 && !(this.p1 + this.p2 === 6)) {
+    if (this.player1 < 4 && this.player2 < 4 && !(this.player1 + this.player2 === 6)) {
       const p: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
-      s = p[this.p1];
-      return (this.p1 === this.p2) ? s + '-All' : s + '-' + p[this.p2];
+      s = p[this.player1];
+      return (this.player1 === this.player2) ? s + '-All' : s + '-' + p[this.player2];
     } else {
-      if (this.p1 === this.p2)
+      if (this.player1 === this.player2)
         return 'Deuce';
-      s = this.p1 > this.p2 ? this.p1N : this.p2N;
-      return (((this.p1 - this.p2) * (this.p1 - this.p2)) === 1) ? 'Advantage ' + s : 'Win for ' + s;
+      s = this.player1 > this.player2 ? this.p1N : this.p2N;
+      return (((this.player1 - this.player2) * (this.player1 - this.player2)) === 1) ? 'Advantage ' + s : 'Win for ' + s;
     }
   }
 
   wonPoint(playerName: string): void {
     if (playerName === 'player1')
-      this.p1 += 1;
+      this.player1 += 1;
     else
-      this.p2 += 1;
+      this.player2 += 1;
   }
 }
