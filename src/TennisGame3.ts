@@ -22,6 +22,11 @@ export class TennisGame3 implements TennisGame {
     this.player2Name = player2Name;
   }
 
+  private populatePlayerScores(): void {
+    this.player1Score = this.scoringNames[this.player1Points];
+    this.player2Score = this.scoringNames[this.player2Points];
+  }
+
   private findLeadingPlayer(): string {
     if (this.player1Points > this.player2Points) {
       return this.player1Name;
@@ -29,12 +34,7 @@ export class TennisGame3 implements TennisGame {
     return this.player2Name;
   }
 
-  private populatePlayerScores(): void {
-    this.player1Score = this.scoringNames[this.player1Points];
-    this.player2Score = this.scoringNames[this.player2Points];
-  }
-
-  private isDeuce(player1Points: number, player2Points: number) {
+  private isDeuce(player1Points: number, player2Points: number): boolean {
     if (player1Points === player2Points) {
       return true;
     }
@@ -42,8 +42,8 @@ export class TennisGame3 implements TennisGame {
   }
 
   private isNormalScore(player1Points: number, player2Points: number): boolean {
-    const playerPointsLessThan4 = player1Points < 4 && player2Points < 4;
-    const thereIsNoDeuce = !(player1Points + player2Points === 6);
+    const playerPointsLessThan4: boolean = player1Points < 4 && player2Points < 4;
+    const thereIsNoDeuce: boolean = !(player1Points + player2Points === 6);
     if (playerPointsLessThan4 && thereIsNoDeuce) {
       return true;
     }
@@ -62,7 +62,7 @@ export class TennisGame3 implements TennisGame {
 
   private getAdvantageOrWin(player1Points: number, player2Points: number): string {
     const leadingPlayer: string = this.findLeadingPlayer();
-    const playerHasAdvantage = (player1Points - player2Points) * (player1Points - player2Points) === 1;
+    const playerHasAdvantage: boolean = (player1Points - player2Points) * (player1Points - player2Points) === 1;
     if (playerHasAdvantage) {
       this.finalScore = 'Advantage ' + leadingPlayer;
       return this.finalScore;
