@@ -1,14 +1,15 @@
 import { TennisGame } from './TennisGame';
 
 export class TennisGame3 implements TennisGame {
-  private _player1Points: number = 0;
-  private _player2Points: number = 0;
-  private _player1Score: string = '';
-  private _player2Score: string = '';
-  private _finalScore: string = '';
-  private _player1Name: string;
-  private _player2Name: string;
-  private _scoringNames: string[] = 
+  private player1Points: number = 0;
+  private player2Points: number = 0;
+  private player1Score: string = '';
+  private player2Score: string = '';
+  private finalScore: string = '';
+  private player1Name: string;
+  private player2Name: string;
+
+  private scoringNames: string[] = 
     [
       'Love',     // 0 points
       'Fifteen',  // 1 point
@@ -17,53 +18,70 @@ export class TennisGame3 implements TennisGame {
     ];
 
   constructor(player1Name: string, player2Name: string) {
-    this._player1Name = player1Name;
-    this._player2Name = player2Name;
+    this.player1Name = player1Name;
+    this.player2Name = player2Name;
   }
 
-  private _findLeadingPlayer(): string {
-    if (this._player1Points > this._player2Points) {
-      return this._player1Name;
+  private findLeadingPlayer(): string {
+    if (this.player1Points > this.player2Points) {
+      return this.player1Name;
     }
-    return this._player2Name
+    return this.player2Name;
   }
 
-  getScore(): string {
-    const leadingPlayer: string = this._findLeadingPlayer();
-
-    //if conditions
-    const playerPointsAreLessThan4 = this._player1Points < 4 && this._player2Points < 4;
-    const thereIsNoDeuce = !(this._player1Points + this._player2Points === 6);
-    const playerHasAdvantage = (this._player1Points - this._player2Points) * (this._player1Points - this._player2Points) === 1;
-    
-    if (playerPointsAreLessThan4 && thereIsNoDeuce) {
-      this._player1Score = this._scoringNames[this._player1Points];
-      this._player2Score = this._scoringNames[this._player2Points];
-      if (this._player1Points != this._player2Points){
-        this._finalScore = this._player1Score + '-' + this._player2Score;
-        return this._finalScore;
-      }
-      this._finalScore = this._player1Score + '-All';
-      return this._finalScore;
-    } else {
-      if (this._player1Points === this._player2Points) {
-        this._finalScore = 'Deuce'
-        return this._finalScore;
-      }
-      if (playerHasAdvantage) {
-        this._finalScore = 'Advantage ' + leadingPlayer;
-        return this._finalScore;
-      }
-      this._finalScore = 'Win for ' + leadingPlayer;
-      return this._finalScore;
+  private isNormalScore(player1Points: number, player2Points: number): boolean {
+    const playerPointsLessThan4 = player1Points < 4 && player2Points < 4;
+    const thereIsNoDeuce = !(player1Points + player2Points === 6);
+    if (playerPointsLessThan4 && thereIsNoDeuce) {
+      return true;
     }
+    return false;
+  }
+
+  private getNormalScore(): string {
+    this.player1Score = this.scoringNames[this.player1Points];
+    this.player2Score = this.scoringNames[this.player2Points];
+    if (this.player1Points != this.player2Points){
+      this.finalScore = this.player1Score + '-' + this.player2Score;
+      return this.finalScore;
+    }
+    this.finalScore = this.player1Score + '-All';
+    return this.finalScore;
+  }
+
+  private isDeuce(player1Points: number, player2Points: number) {
+    if (player1Points === player2Points) {
+      return true;
+    }
+    return false;
+  }
+
+  private getAdvantageOrWin(): string {
+    const leadingPlayer: string = this.findLeadingPlayer();
+    const playerHasAdvantage = (this.player1Points - this.player2Points) * (this.player1Points - this.player2Points) === 1;
+    if (playerHasAdvantage) {
+      this.finalScore = 'Advantage ' + leadingPlayer;
+      return this.finalScore;
+    }
+    this.finalScore = 'Win for ' + leadingPlayer;
+    return this.finalScore;
+  }
+
+  getScore(): string {    
+    if (this.isNormalScore(this.player1Points, this.player2Points)) {
+      return this.getNormalScore();
+    }
+    if (this.isDeuce(this.player1Points, this.player2Points)) {
+      return 'Deuce';
+    }
+    return this.getAdvantageOrWin();
   }
 
   wonPoint(playerName: string): void {
     if (playerName === 'player1') {
-      this._player1Points += 1;
+      this.player1Points += 1;
       return;
     }
-    this._player2Points +=1 ;
+    this.player2Points +=1 ;
   }
 }
