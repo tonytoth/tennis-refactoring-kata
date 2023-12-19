@@ -29,6 +29,18 @@ export class TennisGame3 implements TennisGame {
     return this.player2Name;
   }
 
+  private populatePlayerScores(): void {
+    this.player1Score = this.scoringNames[this.player1Points];
+    this.player2Score = this.scoringNames[this.player2Points];
+  }
+
+  private isDeuce(player1Points: number, player2Points: number) {
+    if (player1Points === player2Points) {
+      return true;
+    }
+    return false;
+  }
+
   private isNormalScore(player1Points: number, player2Points: number): boolean {
     const playerPointsLessThan4 = player1Points < 4 && player2Points < 4;
     const thereIsNoDeuce = !(player1Points + player2Points === 6);
@@ -39,9 +51,8 @@ export class TennisGame3 implements TennisGame {
   }
 
   private getNormalScore(): string {
-    this.player1Score = this.scoringNames[this.player1Points];
-    this.player2Score = this.scoringNames[this.player2Points];
-    if (this.player1Points != this.player2Points){
+    this.populatePlayerScores();
+    if (!this.isDeuce(this.player1Points, this.player2Points)){
       this.finalScore = this.player1Score + '-' + this.player2Score;
       return this.finalScore;
     }
@@ -49,16 +60,9 @@ export class TennisGame3 implements TennisGame {
     return this.finalScore;
   }
 
-  private isDeuce(player1Points: number, player2Points: number) {
-    if (player1Points === player2Points) {
-      return true;
-    }
-    return false;
-  }
-
-  private getAdvantageOrWin(): string {
+  private getAdvantageOrWin(player1Points: number, player2Points: number): string {
     const leadingPlayer: string = this.findLeadingPlayer();
-    const playerHasAdvantage = (this.player1Points - this.player2Points) * (this.player1Points - this.player2Points) === 1;
+    const playerHasAdvantage = (player1Points - player2Points) * (player1Points - player2Points) === 1;
     if (playerHasAdvantage) {
       this.finalScore = 'Advantage ' + leadingPlayer;
       return this.finalScore;
@@ -74,7 +78,7 @@ export class TennisGame3 implements TennisGame {
     if (this.isDeuce(this.player1Points, this.player2Points)) {
       return 'Deuce';
     }
-    return this.getAdvantageOrWin();
+    return this.getAdvantageOrWin(this.player1Points, this.player2Points);
   }
 
   wonPoint(playerName: string): void {
