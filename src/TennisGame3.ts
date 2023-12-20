@@ -3,8 +3,6 @@ import { TennisGame } from './TennisGame';
 export class TennisGame3 implements TennisGame {
   private player1Points: number = 0;
   private player2Points: number = 0;
-  private player1Score: string = '';
-  private player2Score: string = '';
   private finalScore: string = '';
   private player1Name: string;
   private player2Name: string;
@@ -26,13 +24,8 @@ export class TennisGame3 implements TennisGame {
     return this.scoringNames[playerPoints];
   }
 
-  private populatePlayerScores(): void {
-    this.player1Score = this.getPlayerScore(this.player1Points);
-    this.player2Score = this.getPlayerScore(this.player2Points);
-  }
-
-  private findLeadingPlayer(): string {
-    if (this.player1Points > this.player2Points) {
+  private findLeadingPlayer(player1Points: number, player2Points: number): string {
+    if (player1Points > player2Points) {
       return this.player1Name;
     }
     return this.player2Name;
@@ -55,13 +48,12 @@ export class TennisGame3 implements TennisGame {
     return false;
   }
 
-  private getNormalScore(): string {
-    this.populatePlayerScores();
-    if (this.player1Score != this.player2Score){
-      this.finalScore = `${this.player1Score}-${this.player2Score}`;
+  private getNormalScore(player1Score: string, player2Score: string): string {
+    if (player1Score != player2Score){
+      this.finalScore = `${player1Score}-${player2Score}`;
       return this.finalScore;
     }
-    this.finalScore = this.player1Score + '-All';
+    this.finalScore = player1Score + '-All';
     return this.finalScore;
   }
 
@@ -80,20 +72,20 @@ export class TennisGame3 implements TennisGame {
 
   getScore(): string {    
     if (this.isNormalScore(this.player1Points, this.player2Points)) {
-      return this.getNormalScore();
+      return this.getNormalScore(this.getPlayerScore(this.player1Points), this.getPlayerScore(this.player2Points));
     }
     if (this.isDeuce(this.player1Points, this.player2Points)) {
       return 'Deuce';
     }
     if (this.isAdvantage(this.player1Points, this.player2Points)) {
-      return this.getAdvantage(this.findLeadingPlayer())
+      return this.getAdvantage(this.findLeadingPlayer(this.player1Points, this.player2Points))
     }
-    this.finalScore = `Win for ${this.findLeadingPlayer()}`;
+    this.finalScore = `Win for ${this.findLeadingPlayer(this.player1Points, this.player2Points)}`;
     return this.finalScore;
   }
 
   wonPoint(playerName: string): void {
-    if (playerName === 'player1') {
+    if (playerName === this.player1Name) {
       this.player1Points += 1;
       return;
     }
