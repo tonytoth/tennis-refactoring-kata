@@ -3,7 +3,6 @@ import { TennisGame } from './TennisGame';
 export class TennisGame3 implements TennisGame {
   private player1Points: number = 0;
   private player2Points: number = 0;
-  private finalScore: string = '';
   private player1Name: string;
   private player2Name: string;
 
@@ -32,42 +31,38 @@ export class TennisGame3 implements TennisGame {
   }
 
   private isDeuce(player1Points: number, player2Points: number): boolean {
-    const isDeuce = player1Points === player2Points && this.player1Points >= 3;
-    if (isDeuce) {
-      return true;
-    }
-    return false;
+    return player1Points === player2Points && player1Points >= 3;
   }
 
   private isNormalScore(player1Points: number, player2Points: number): boolean {
     const playerPointsLessThan4: boolean = player1Points < 4 && player2Points < 4;
     const thereIsNoDeuce: boolean = !(player1Points + player2Points === 6);
-    if (playerPointsLessThan4 && thereIsNoDeuce) {
-      return true;
-    }
-    return false;
+    return playerPointsLessThan4 && thereIsNoDeuce;
   }
 
   private getNormalScore(player1Score: string, player2Score: string): string {
     if (player1Score != player2Score){
-      this.finalScore = `${player1Score}-${player2Score}`;
-      return this.finalScore;
+      return `${player1Score}-${player2Score}`;
     }
-    this.finalScore = player1Score + '-All';
-    return this.finalScore;
+    return player1Score + '-All';
   }
 
   private isAdvantage(player1Points: number, player2Points: number): boolean {
     const pointDifference = Math.abs(player1Points - player2Points);
-    if (pointDifference === 1) {
-      return true;
-    }
-    return false;
+    return pointDifference === 1;
   }
 
   private getAdvantage(leadingPlayer: string): string {
-    this.finalScore = `Advantage ${leadingPlayer}`;
-    return this.finalScore;
+    return `Advantage ${leadingPlayer}`;
+  }
+
+  private isWin(player1Points: number, player2Points: number): boolean {
+    const pointDifference = Math.abs(player1Points - player2Points);
+    return pointDifference >= 2;
+  }
+
+  private getWin(leadingPlayer: string): string {
+    return `Win for ${leadingPlayer}`;
   }
 
   getScore(): string {    
@@ -78,10 +73,12 @@ export class TennisGame3 implements TennisGame {
       return 'Deuce';
     }
     if (this.isAdvantage(this.player1Points, this.player2Points)) {
-      return this.getAdvantage(this.findLeadingPlayer(this.player1Points, this.player2Points))
+      return this.getAdvantage(this.findLeadingPlayer(this.player1Points, this.player2Points));
     }
-    this.finalScore = `Win for ${this.findLeadingPlayer(this.player1Points, this.player2Points)}`;
-    return this.finalScore;
+    if (this.isWin(this.player1Points, this.player2Points)) {
+      return this.getWin(this.findLeadingPlayer(this.player1Points, this.player2Points))
+    }
+    return 'Invalid scoring state';
   }
 
   wonPoint(playerName: string): void {
@@ -89,6 +86,9 @@ export class TennisGame3 implements TennisGame {
       this.player1Points += 1;
       return;
     }
-    this.player2Points +=1 ;
+    if (playerName === this.player2Name) {
+      this.player2Points += 1;
+      return;
+    }
   }
 }
