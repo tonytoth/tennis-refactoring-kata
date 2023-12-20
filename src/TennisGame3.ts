@@ -36,7 +36,7 @@ export class TennisGame3 implements TennisGame {
 
   private isNormalScore(player1Points: number, player2Points: number): boolean {
     const playerPointsLessThan4: boolean = player1Points < 4 && player2Points < 4;
-    const thereIsNoDeuce: boolean = !(player1Points + player2Points === 6);
+    const thereIsNoDeuce: boolean = player1Points + player2Points != 6;
     return playerPointsLessThan4 && thereIsNoDeuce;
   }
 
@@ -44,11 +44,11 @@ export class TennisGame3 implements TennisGame {
     if (player1Score != player2Score){
       return `${player1Score}-${player2Score}`;
     }
-    return player1Score + '-All';
+    return `${player1Score}-All`;
   }
 
   private isAdvantage(player1Points: number, player2Points: number): boolean {
-    const pointDifference = Math.abs(player1Points - player2Points);
+    const pointDifference: number = Math.abs(player1Points - player2Points);
     return pointDifference === 1;
   }
 
@@ -57,7 +57,7 @@ export class TennisGame3 implements TennisGame {
   }
 
   private isWin(player1Points: number, player2Points: number): boolean {
-    const pointDifference = Math.abs(player1Points - player2Points);
+    const pointDifference: number = Math.abs(player1Points - player2Points);
     return pointDifference >= 2;
   }
 
