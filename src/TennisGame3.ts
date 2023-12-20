@@ -23,7 +23,7 @@ export class TennisGame3 implements TennisGame {
     return this.scoringNames[playerPoints];
   }
 
-  private findLeadingPlayer(player1Points: number, player2Points: number): string {
+  private findLeadingPlayerName(player1Points: number, player2Points: number): string {
     if (player1Points > player2Points) {
       return this.player1Name;
     }
@@ -73,10 +73,10 @@ export class TennisGame3 implements TennisGame {
       return 'Deuce';
     }
     if (this.isAdvantage(this.player1Points, this.player2Points)) {
-      return this.getAdvantage(this.findLeadingPlayer(this.player1Points, this.player2Points));
+      return this.getAdvantage(this.findLeadingPlayerName(this.player1Points, this.player2Points));
     }
     if (this.isWin(this.player1Points, this.player2Points)) {
-      return this.getWin(this.findLeadingPlayer(this.player1Points, this.player2Points))
+      return this.getWin(this.findLeadingPlayerName(this.player1Points, this.player2Points))
     }
     return 'Invalid scoring state';
   }
