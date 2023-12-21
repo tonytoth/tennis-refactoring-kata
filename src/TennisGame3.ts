@@ -34,13 +34,13 @@ export class TennisGame3 implements TennisGame {
     return player1Points === player2Points && player1Points >= 3;
   }
 
-  private isNormalScore(player1Points: number, player2Points: number): boolean {
+  private isNonCriticalScore(player1Points: number, player2Points: number): boolean {
     const playerPointsLessThan4: boolean = player1Points < 4 && player2Points < 4;
     const thereIsNoDeuce: boolean = player1Points + player2Points != 6;
     return playerPointsLessThan4 && thereIsNoDeuce;
   }
 
-  private getNormalScore(player1Score: string, player2Score: string): string {
+  private getNonCriticalScore(player1Score: string, player2Score: string): string {
     if (player1Score != player2Score){
       return `${player1Score}-${player2Score}`;
     }
@@ -66,8 +66,8 @@ export class TennisGame3 implements TennisGame {
   }
 
   getScore(): string {    
-    if (this.isNormalScore(this.player1Points, this.player2Points)) {
-      return this.getNormalScore(this.getPlayerScore(this.player1Points), this.getPlayerScore(this.player2Points));
+    if (this.isNonCriticalScore(this.player1Points, this.player2Points)) {
+      return this.getNonCriticalScore(this.getPlayerScore(this.player1Points), this.getPlayerScore(this.player2Points));
     }
     if (this.isDeuce(this.player1Points, this.player2Points)) {
       return 'Deuce';
